@@ -66,13 +66,9 @@ namespace Kodanalys
                     string searchName = Console.ReadLine();
                     bool exists = users.Exists(u => u.Name == searchName);
                     if (exists)
-                    {
-                        Console.WriteLine("Användaren finns i listan.");
-                    }
+                        Console.WriteLine($"Användaren '{searchName}' finns i listan.");
                     else
-                    {
                         Console.WriteLine("Användaren hittades inte.");
-                    }
                 }
                 else if (menuChoice == "5")
                 {
