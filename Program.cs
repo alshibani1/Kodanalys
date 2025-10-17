@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Kodanalys.Models;
 
 namespace Kodanalys
@@ -57,22 +58,27 @@ namespace Kodanalys
         static void AddUser()
         {
             Console.Write("Ange namn: ");
-            string userName = Console.ReadLine();
+            string userName = Console.ReadLine()?.Trim();
 
-            if (!string.IsNullOrWhiteSpace(userName))
-            {
-                users.Add(new User { Name = userName });
-                Console.WriteLine($"Användaren '{userName}' lades till.");
-            }
-            else
+            if (string.IsNullOrEmpty(userName))
             {
                 Console.WriteLine("Namnet får inte vara tomt.");
+                return;
             }
+
+            if (users.Any(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase)))
+            {
+                Console.WriteLine("Användaren finns redan.");
+                return;
+            }
+
+            users.Add(new User { Name = userName });
+            Console.WriteLine($"Användaren '{userName}' lades till.");
         }
 
         static void ShowUsers()
         {
-            if (users.Count == 0)
+            if (!users.Any())
             {
                 Console.WriteLine("Inga användare finns i listan.");
                 return;
@@ -88,9 +94,9 @@ namespace Kodanalys
         static void RemoveUser()
         {
             Console.Write("Ange namn att ta bort: ");
-            string nameToRemove = Console.ReadLine();
-            User foundUser = users.Find(u => u.Name == nameToRemove);
+            string nameToRemove = Console.ReadLine()?.Trim();
 
+            User foundUser = users.FirstOrDefault(u => u.Name.Equals(nameToRemove, StringComparison.OrdinalIgnoreCase));
             if (foundUser != null)
             {
                 users.Remove(foundUser);
@@ -105,9 +111,9 @@ namespace Kodanalys
         static void SearchUser()
         {
             Console.Write("Ange namn att söka: ");
-            string searchName = Console.ReadLine();
-            bool exists = users.Exists(u => u.Name == searchName);
+            string searchName = Console.ReadLine()?.Trim();
 
+            bool exists = users.Any(u => u.Name.Equals(searchName, StringComparison.OrdinalIgnoreCase));
             if (exists)
                 Console.WriteLine($"Användaren '{searchName}' finns i listan.");
             else
