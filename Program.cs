@@ -14,73 +14,104 @@ namespace Kodanalys
 
             while (isRunning)
             {
-                Console.WriteLine("Välj ett alternativ:");
-                Console.WriteLine("1. Lägg till användare");
-                Console.WriteLine("2. Visa alla användare");
-                Console.WriteLine("3. Ta bort användare");
-                Console.WriteLine("4. Sök användare");
-                Console.WriteLine("5. Avsluta");
-
+                ShowMenu();
                 string menuChoice = Console.ReadLine();
 
-                if (menuChoice == "1")
+                switch (menuChoice)
                 {
-                    Console.Write("Ange namn: ");
-                    string userName = Console.ReadLine();
-                    if (!string.IsNullOrWhiteSpace(userName))
-                    {
-                        users.Add(new User { Name = userName });
-                        Console.WriteLine($"Användaren '{userName}' lades till.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Namnet får inte vara tomt.");
-                    }
-                }
-                else if (menuChoice == "2")
-                {
-                    Console.WriteLine("Användare:");
-                    foreach (User user in users)
-                    {
-                        Console.WriteLine(user.Name);
-                    }
-                }
-                else if (menuChoice == "3")
-                {
-                    Console.Write("Ange namn att ta bort: ");
-                    string nameToRemove = Console.ReadLine();
-                    User foundUser = users.Find(u => u.Name == nameToRemove);
-                    if (foundUser != null)
-                    {
-                        users.Remove(foundUser);
-                        Console.WriteLine($"Användaren '{nameToRemove}' togs bort.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Användaren hittades inte.");
-                    }
-                }
-                else if (menuChoice == "4")
-                {
-                    Console.Write("Ange namn att söka: ");
-                    string searchName = Console.ReadLine();
-                    bool exists = users.Exists(u => u.Name == searchName);
-                    if (exists)
-                        Console.WriteLine($"Användaren '{searchName}' finns i listan.");
-                    else
-                        Console.WriteLine("Användaren hittades inte.");
-                }
-                else if (menuChoice == "5")
-                {
-                    isRunning = false;
-                }
-                else
-                {
-                    Console.WriteLine("Ogiltigt val.");
+                    case "1":
+                        AddUser();
+                        break;
+                    case "2":
+                        ShowUsers();
+                        break;
+                    case "3":
+                        RemoveUser();
+                        break;
+                    case "4":
+                        SearchUser();
+                        break;
+                    case "5":
+                        isRunning = false;
+                        Console.WriteLine("Programmet avslutas...");
+                        break;
+                    default:
+                        Console.WriteLine("Ogiltigt val. Försök igen.");
+                        break;
                 }
 
                 Console.WriteLine();
             }
+        }
+
+        static void ShowMenu()
+        {
+            Console.WriteLine("Välj ett alternativ:");
+            Console.WriteLine("1. Lägg till användare");
+            Console.WriteLine("2. Visa alla användare");
+            Console.WriteLine("3. Ta bort användare");
+            Console.WriteLine("4. Sök användare");
+            Console.WriteLine("5. Avsluta");
+        }
+
+        static void AddUser()
+        {
+            Console.Write("Ange namn: ");
+            string userName = Console.ReadLine();
+
+            if (!string.IsNullOrWhiteSpace(userName))
+            {
+                users.Add(new User { Name = userName });
+                Console.WriteLine($"Användaren '{userName}' lades till.");
+            }
+            else
+            {
+                Console.WriteLine("Namnet får inte vara tomt.");
+            }
+        }
+
+        static void ShowUsers()
+        {
+            if (users.Count == 0)
+            {
+                Console.WriteLine("Inga användare finns i listan.");
+                return;
+            }
+
+            Console.WriteLine("Användare:");
+            foreach (User user in users)
+            {
+                Console.WriteLine(user.Name);
+            }
+        }
+
+        static void RemoveUser()
+        {
+            Console.Write("Ange namn att ta bort: ");
+            string nameToRemove = Console.ReadLine();
+            User foundUser = users.Find(u => u.Name == nameToRemove);
+
+            if (foundUser != null)
+            {
+                users.Remove(foundUser);
+                Console.WriteLine($"Användaren '{nameToRemove}' togs bort.");
+            }
+            else
+            {
+                Console.WriteLine("Användaren hittades inte.");
+            }
+        }
+
+        static void SearchUser()
+        {
+            Console.Write("Ange namn att söka: ");
+            string searchName = Console.ReadLine();
+            bool exists = users.Exists(u => u.Name == searchName);
+
+            if (exists)
+                Console.WriteLine($"Användaren '{searchName}' finns i listan.");
+            else
+                Console.WriteLine("Användaren hittades inte.");
         }
     }
 }
